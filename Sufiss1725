@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Ifrah ❤️</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #1a001f, #000);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+/* Center Container */
+.container {
+    text-align: center;
+    z-index: 2;
+    position: relative;
+}
+
+/* Glowing Heart */
+.heart {
+    font-size: 150px;
+    cursor: pointer;
+    animation: pulse 1.2s infinite;
+    text-shadow: 0 0 20px red, 0 0 40px pink;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+.click-text {
+    margin-top: 10px;
+    font-size: 22px;
+    opacity: 0.8;
+}
+
+.message {
+    font-size: 55px;
+    margin-top: 30px;
+    opacity: 0;
+    text-shadow: 0 0 25px #ff4da6;
+}
+
+/* Floating Hearts */
+.floating-heart {
+    position: absolute;
+    color: #ff4da6;
+    font-size: 20px;
+    animation: floatUp 6s linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(100vh); opacity: 1; }
+    100% { transform: translateY(-10vh); opacity: 0; }
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<div class="container">
+    <div class="heart" onclick="startLove()">❤️</div>
+    <div class="click-text">Click My Heart</div>
+    <div class="message" id="loveText"></div>
+</div>
+
+<audio id="bgMusic" src="music.mp3" loop></audio>
+
+<script>
+function startLove() {
+    document.getElementById("bgMusic").play();
+    typeWriter();
+    createFloatingHearts();
+}
+
+/* Typing Animation */
+function typeWriter() {
+    const text = "I Love You Ifrah ❤️";
+    const element = document.getElementById("loveText");
+    element.style.opacity = 1;
+    let i = 0;
+    const interval = setInterval(() => {
+        if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+        } else {
+            clearInterval(interval);
+        }
+    }, 100);
+}
+
+/* Floating Hearts */
+function createFloatingHearts() {
+    setInterval(() => {
+        const heart = document.createElement("div");
+        heart.classList.add("floating-heart");
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = Math.random() * 20 + 15 + "px";
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 6000);
+    }, 300);
+}
+
+/* Fireworks Animation */
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function createFirework(x, y) {
+    for (let i = 0; i < 50; i++) {
+        particles.push({
+            x: x,
+            y: y,
+            angle: Math.random() * 2 * Math.PI,
+            speed: Math.random() * 5 + 2,
+            radius: 2,
+            alpha: 1
+        });
+    }
+}
+
+function animateFireworks() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach((p, index) => {
+        p.x += Math.cos(p.angle) * p.speed;
+        p.y += Math.sin(p.angle) * p.speed;
+        p.alpha -= 0.02;
+
+        ctx.fillStyle = "rgba(255, 77, 166," + p.alpha + ")";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (p.alpha <= 0) {
+            particles.splice(index, 1);
+        }
+    });
+
+    requestAnimationFrame(animateFireworks);
+}
+
+canvas.addEventListener("click", function(e) {
+    createFirework(e.clientX, e.clientY);
+});
+
+animateFireworks();
+</script>
+
+</body>
+</html>
